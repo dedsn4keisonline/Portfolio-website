@@ -68,7 +68,7 @@ figcaption{color:var(--dim);margin-top:.4rem;font-size:13px}
 </head>
 <body>
 <div class="page">
-  <p class="cmd" id="cmd"><b>$</b> man netsec-lab<span class="cur" id="cur" hidden></span></p>
+  <p class="cmd" id="cmd"><b>$</b> cd netsec-lab<span class="cur" id="cur" hidden></span></p>
 
   <main id="man">
     <div class="bar"><span>NETSEC-LAB(7)</span><span>Personal Manual</span><span>NETSEC-LAB(7)</span></div>
@@ -213,7 +213,7 @@ figcaption{color:var(--dim);margin-top:.4rem;font-size:13px}
   });
 
   if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var cmd=document.getElementById('cmd'), cur=document.getElementById('cur'), text='man netsec-lab', n=0;
+  var cmd=document.getElementById('cmd'), cur=document.getElementById('cur'), text='cd netsec-lab', n=0;
   root.classList.add('booting');
   cmd.innerHTML='<b>$</b> ';
   cmd.appendChild(cur); cur.hidden=false;
