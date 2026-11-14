@@ -57,7 +57,7 @@ dd span{display:block;color:var(--dim)}
 </head>
 <body>
 <div class="page">
-  <p class="cmd" id="cmd"><b>$</b> man hasan-projects<span class="cur" id="cur" hidden></span></p>
+  <p class="cmd" id="cmd"><b>$</b> cd hasan-projects<span class="cur" id="cur" hidden></span></p>
 
   <main id="man">
     <div class="bar"><span>HASAN-PROJECTS(7)</span><span>Personal Manual</span><span>HASAN-PROJECTS(7)</span></div>
@@ -147,7 +147,7 @@ dd span{display:block;color:var(--dim)}
   });
 
   if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var cmd=document.getElementById('cmd'), cur=document.getElementById('cur'), text='man hasan-projects', n=0;
+  var cmd=document.getElementById('cmd'), cur=document.getElementById('cur'), text='cd hasan-projects', n=0;
   root.classList.add('booting');
   cmd.innerHTML='<b>$</b> ';
   cmd.appendChild(cur); cur.hidden=false;
