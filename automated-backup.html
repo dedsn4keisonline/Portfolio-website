@@ -1,143 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A detailed guide to building an automated backup system for Linux and Windows using Rsync and Task Scheduler.">
-    <title>Automated Backup System - Tech Projects</title>
-    <link rel="stylesheet" href="homelab.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="icon" href="favicon.ico" type="image/x-icon"> <!-- Add a favicon -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Automated Backup System | Hasan Q</title>
+<meta name="description" content="A detailed guide to building an automated backup system for Linux and Windows using Rsync and Task Scheduler.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2216%22 fill=%22%23282828%22/><text x=%2214%22 y=%2272%22 font-size=%2260%22 font-family=%22monospace%22 fill=%22%23fabd2f%22>$_</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<style>
+:root{--bg:#282828;--fg:#ebdbb2;--dim:#a89984;--hi:#fabd2f;--link:#83a598;--rule:#3c3836}
+:root[data-theme="light"]{--bg:#f7f7f4;--fg:#282828;--dim:#6b6558;--hi:#a8650b;--link:#076678;--rule:#dcdad2}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;color-scheme:dark}
+html[data-theme="light"]{color-scheme:light}
+body{background:var(--bg);color:var(--fg);font:400 15px/1.75 'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;padding:2rem 0 5rem;padding-bottom:calc(5rem + env(safe-area-inset-bottom,0px))}
+::selection{background:var(--hi);color:var(--bg)}
+a{color:var(--link);text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px}
+a:hover,a:focus-visible{background:var(--fg);color:var(--bg);outline:none;text-decoration:none}
+.page{max-width:80ch;margin:0 auto;padding:0 1.25rem}
+.cmd{color:var(--dim);margin-bottom:1.5rem}
+.cmd b{color:var(--hi);font-weight:400}
+.cur{display:inline-block;width:.6em;height:1.1em;background:var(--hi);vertical-align:-.2em;animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.booting #man{visibility:hidden}
+.bar{display:flex;justify-content:space-between;color:var(--dim);gap:1rem}
+h1,h2,h3{font-size:1em;font-weight:700}
+h2{margin:2.4rem 0 .4rem;color:var(--hi)}
+h3{margin:1.8rem 0 .3rem;padding-left:3ch}
+.b{padding-left:7ch}
+.b p+p,.b p+ul,.b p+ol{margin-top:.8rem}
+.name{font-size:1.5rem;line-height:1.4;margin-top:.2rem}
+dl{display:grid;grid-template-columns:max-content 1fr;column-gap:3ch;row-gap:.8rem}
+dt{font-weight:700}
+ul,ol{margin-top:.8rem}
+ul{list-style:none}
+ul li{padding-left:2ch;text-indent:-2ch}
+ul li::before{content:"- ";color:var(--dim)}
+ol{padding-left:3ch}
+ol li::marker{color:var(--dim)}
+li+li{margin-top:.4rem}
+li strong{color:var(--fg)}
+pre{margin:.6rem 0;padding:.4rem 1.5ch;border-left:2px solid var(--hi);overflow-x:auto;white-space:pre;font:inherit}
+figure{margin:1.4rem 0 .4rem}
+figure img{display:block;max-width:100%;height:auto;border:1px solid var(--rule)}
+figcaption{color:var(--dim);margin-top:.4rem;font-size:13px}
+.foot{margin-top:3rem;padding-top:1rem;border-top:1px dashed var(--rule)}
+.end{margin-top:1.2rem;background:var(--fg);color:var(--bg);display:inline-block;padding:0 .6ch}
+.end i{display:inline-block;width:.6em;height:1.1em;background:var(--bg);vertical-align:-.2em;margin-left:.4ch;animation:blink 1.1s steps(1) infinite}
+.status{position:fixed;left:0;right:0;bottom:0;background:var(--fg);color:var(--bg);font-size:13px;line-height:1.6;padding:.35rem 1rem calc(.35rem + env(safe-area-inset-bottom,0px));display:flex;justify-content:space-between;gap:1rem;z-index:5}
+.status button{font:inherit;background:none;border:0;color:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.status button:focus-visible{outline:1px solid var(--bg);outline-offset:2px}
+#pos{white-space:nowrap}
+@media (max-width:640px){
+  body{font-size:14px}
+  .b{padding-left:2ch}
+  h3{padding-left:1ch}
+  .bar span:nth-child(2){display:none}
+  dl{grid-template-columns:1fr;row-gap:0}
+  dd{padding-left:2ch;margin-bottom:.8rem}
+  .name{font-size:1.2rem}
+  #msg{display:none}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.cur,.end i{animation:none}}
+</style>
 </head>
 <body>
-    <!-- Glowing Sidebars -->
-    <div class="sidebar left-sidebar"></div>
-    <div class="sidebar right-sidebar"></div>
+<div class="page">
+  <p class="cmd" id="cmd"><b>$</b> man backup<span class="cur" id="cur" hidden></span></p>
 
-    <!-- Binary Code Animation -->
-    <div class="binary-animation left-binary"></div>
-    <div class="binary-animation right-binary"></div>
+  <main id="man">
+    <div class="bar"><span>BACKUP(7)</span><span>Personal Manual</span><span>BACKUP(7)</span></div>
 
-    <!-- Header -->
-    <header>
-        <div class="header-content">
-            <h1>//Automated_Backup_System</h1>
-            <p id="typewriter" class="typewriter">Never lose data again...</p> <!-- Added default text -->
-            <div class="header-glow"></div>
-        </div>
-    </header>
+    <h2>NAME</h2>
+    <div class="b"><h1 class="name">backup</h1><p>automated backups, so I never lose data again</p></div>
 
-    <!-- Navigation -->
-    <nav>
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="projects.html">Projects</a></li>
-            <li><a href="#contacts">Contacts</a></li>
-        </ul>
-    </nav>
+    <h2>DESCRIPTION</h2>
+    <div class="b">
+      <p>Losing important data is a nightmare, so I built an automated backup system to keep my files safe. It uses Rsync on Linux and Task Scheduler on Windows to create regular backups of critical data.</p>
+      <p>Here's how I set it up.</p>
+      <figure>
+        <img src="backup-overview.jpg" alt="Automated Backup System - A backup dashboard showing successful backups">
+        <figcaption>Fig. 1: Backup dashboard showing successful backups.</figcaption>
+      </figure>
+    </div>
 
-    <!-- Overview Section -->
-    <section id="overview">
-        <h2>Overview</h2>
-        <p>
-            Losing important data is a nightmare, so I built an automated backup system to ensure my files are always safe. This project uses Rsync for Linux and Task Scheduler for Windows to create regular backups of critical data. 
-            Let me walk you through how I set it up!
-        </p>
-        <div class="image-container">
-            <img src="backup-overview.jpg" alt="Automated Backup System - A backup dashboard showing successful backups">
-            <p class="image-caption"></p>
-        </div>
-    </section>
+    <h2>COMPONENTS</h2>
+    <div class="b">
+      <dl>
+        <dt>Cross-platform</dt><dd>Works on both Linux and Windows systems.</dd>
+        <dt>Incremental</dt><dd>Rsync backs up only what changed, saving time and storage.</dd>
+        <dt>Scheduled</dt><dd>Cron (Linux) and Task Scheduler (Windows) run the backups automatically.</dd>
+        <dt>Encrypted</dt><dd>Backups are secured with AES-256 encryption.</dd>
+      </dl>
+    </div>
 
-    <!-- Key Features Section -->
-    <section id="features">
-        <h2>What I Built</h2>
-        <p>
-            Here are the key components of my automated backup system:
-        </p>
-        <ul>
-            <li><strong>Cross-Platform Support:</strong> Works on both Linux and Windows systems.</li>
-            <li><strong>Incremental Backups:</strong> Uses Rsync to only back up changes, saving time and storage.</li>
-            <li><strong>Scheduled Backups:</strong> Automates backups using Cron (Linux) and Task Scheduler (Windows).</li>
-            <li><strong>Encryption:</strong> Secures backups with AES-256 encryption.</li>
-        </ul>
-    </section>
+    <h2>SETUP</h2>
 
-    <!-- Setup Guide Section -->
-    <section id="setup">
-        <h2>How I Built It</h2>
+    <h3>Rsync on Linux</h3>
+    <div class="b">
+      <p>I started with Rsync on my Linux machine:</p>
+      <ol>
+        <li>Install Rsync with the package manager:
+<pre>$ sudo apt install rsync</pre></li>
+        <li>Create a backup script to automate the process.<!-- TODO: paste your backup script here in a <pre> block --></li>
+      </ol>
+      <figure>
+        <img src="rsync-linux.jpg" alt="Rsync on Linux - Terminal showing Rsync in action">
+        <figcaption>Fig. 2: Rsync in action.</figcaption>
+      </figure>
+    </div>
 
-        <!-- Step 1: Setting Up Rsync on Linux -->
-        <div class="step">
-            <h3>1. Setting Up Rsync on Linux</h3>
-            <p>
-                I started by setting up Rsync on my Linux machine. Here’s how I did it:
-            </p>
-            <ol>
-                <li>I installed Rsync using the package manager: <code>sudo apt install rsync</code>.</li>
-                <li>I created a backup script to automate the process:</li>
-            
-            <div class="image-container">
-                <img src="rsync-linux.jpg" alt="Rsync on Linux - Terminal showing Rsync in action">
-                <p class="image-caption">Rsync in Action</p>
-            </div>
-        </div>
+    <h3>Task Scheduler on Windows</h3>
+    <div class="b">
+      <p>On my Windows machine, I used Task Scheduler to automate the backups:</p>
+      <ol>
+        <li>Install Rsync for Windows using Cygwin.</li>
+        <li>Create a batch script to run Rsync.<!-- TODO: paste your batch script here in a <pre> block --></li>
+        <li>Set up a scheduled task in Task Scheduler to run the script daily.</li>
+      </ol>
+      <figure>
+        <img src="task.png" alt="Task Scheduler on Windows - Screenshot of Task Scheduler configuration">
+        <figcaption>Fig. 3: Task Scheduler configuration.</figcaption>
+      </figure>
+    </div>
 
-        <!-- Step 2: Setting Up Task Scheduler on Windows -->
-        <div class="step">
-            <h3>2. Setting Up Task Scheduler on Windows</h3>
-            <p>
-                For my Windows machine, I used Task Scheduler to automate backups. Here’s my process:
-            </p>
-            <ol>
-                <li>I installed Rsync for Windows using Cygwin.</li>
-                <li>I created a batch script to run Rsync:</li>
-                <li>I set up a scheduled task in Task Scheduler to run the script daily.</li>
-           
-            <div class="image-container">
-                <img src="task.png" alt="Task Scheduler on Windows - Screenshot of Task Scheduler configuration">
-                <p class="image-caption">Task Scheduler Configuration</p>
-            </div>
-        </div>
+    <h3>Encryption</h3>
+    <div class="b">
+      <p>To secure the backups, I added AES-256 encryption:</p>
+      <ol>
+        <li>Use OpenSSL to encrypt the backup files.<!-- TODO: paste your openssl command here in a <pre> block --></li>
+        <li>Add the encryption step to the backup scripts.</li>
+        <li>Store the encryption key securely in a password manager.</li>
+      </ol>
+      <figure>
+        <img src="encryption.jpg" alt="Encryption - Terminal showing OpenSSL encryption">
+        <figcaption>Fig. 4: Encrypting backups.</figcaption>
+      </figure>
+    </div>
 
-        <!-- Step 3: Adding Encryption -->
-        <div class="step">
-            <h3>3. Adding Encryption</h3>
-            <p>
-                To secure my backups, I added AES-256 encryption. Here’s how I did it:
-            </p>
-            <ol>
-                <li>I used OpenSSL to encrypt the backup files:</li>
-                <li>I added the encryption step to my backup scripts.</li>
-                <li>I stored the encryption key securely using a password manager.</li>
-            </ol>
-            <div class="image-container">
-                <img src="encryption.jpg" alt="Encryption - Terminal showing OpenSSL encryption">
-                <p class="image-caption">Encrypting Backups</p>
-            </div>
-        </div>
+    <h3>Testing</h3>
+    <div class="b">
+      <p>Finally, I tested the system to make sure everything worked as expected:</p>
+      <ol>
+        <li>Run the backup scripts manually to verify they work.</li>
+        <li>Check the backup logs for errors.</li>
+        <li>Restore a few files from the backup to confirm data integrity.</li>
+      </ol>
+      <figure>
+        <img src="backup-test.jpg" alt="Results of testing the backup system">
+        <figcaption>Fig. 5: Testing the backups.</figcaption>
+      </figure>
+    </div>
 
-        <!-- Step 4: Testing the System -->
-        <div class="step">
-            <h3>4. Testing the System</h3>
-            <p>
-                Finally, I tested the system to ensure everything worked as expected:
-            </p>
-            <ol>
-                <li>I ran the backup scripts manually to verify they worked.</li>
-                <li>I checked the backup logs for errors.</li>
-                <li>I restored a few files from the backup to ensure data integrity.</li>
-            </ol>
-            <div class="image-container">
-                <img src="backup-test.jpg" alt="">
-                <p class="image-caption"></p>
-            </div>
-        </div>
-    </section>
+    <h2>SEE ALSO</h2>
+    <div class="b">
+      <dl>
+        <dt><a href="projects.html">hasan-projects(7)</a></dt><dd>All my projects.</dd>
+        <dt><a href="homelab.html">homelab(7)</a></dt><dd>My home lab setup.</dd>
+        <dt><a href="index.html">hasan(1)</a></dt><dd>About me, and how to reach me.</dd>
+      </dl>
+    </div>
 
+    <div class="bar foot"><span>hasan 1.0</span><span id="year">2026</span><span>BACKUP(7)</span></div>
+    <div class="end">(END)<i></i></div>
+  </main>
+</div>
 
-    <!-- JavaScript -->
-    <script src=""></script>
+<div class="status" role="status">
+  <span id="msg">Manual page backup(7). Press h for help.</span>
+  <span><button type="button" id="theme">[t] theme</button> &nbsp; <span id="pos">line 1/1</span></span>
+</div>
+
+<script>
+(function(){
+  var root=document.documentElement, msg=document.getElementById('msg'), pos=document.getElementById('pos');
+  var base=msg.textContent, lh=parseFloat(getComputedStyle(document.body).lineHeight)||26, tm;
+  document.getElementById('year').textContent=new Date().getFullYear();
+
+  function theme(){
+    var n=root.dataset.theme==='light'?'dark':'light'; root.dataset.theme=n;
+    try{localStorage.setItem('theme',n)}catch(e){}
+  }
+  document.getElementById('theme').addEventListener('click',theme);
+
+  function say(t){msg.textContent=t;clearTimeout(tm);tm=setTimeout(function(){msg.textContent=base},4000)}
+  function update(){
+    var total=Math.max(1,Math.round(root.scrollHeight/lh));
+    var line=Math.min(total,Math.max(1,Math.round((window.scrollY+window.innerHeight)/lh)));
+    pos.textContent='line '+line+'/'+total+' '+Math.min(100,Math.round(line/total*100))+'%';
+  }
+  window.addEventListener('scroll',update,{passive:true});
+  window.addEventListener('resize',update);
+  window.addEventListener('load',update);
+  update();
+
+  document.addEventListener('keydown',function(e){
+    if(e.ctrlKey||e.metaKey||e.altKey) return;
+    var tag=e.target.tagName, k=e.key, jump=function(y){window.scrollTo({top:y})};
+    if(k===' '&&(tag==='BUTTON'||tag==='A')) return;
+    if(k==='j') window.scrollBy(0,lh);
+    else if(k==='k') window.scrollBy(0,-lh);
+    else if(k===' '||k==='f'){e.preventDefault();window.scrollBy(0,window.innerHeight*.9)}
+    else if(k==='b') window.scrollBy(0,-window.innerHeight*.9);
+    else if(k==='g') jump(0);
+    else if(k==='G') jump(root.scrollHeight);
+    else if(k==='t') theme();
+    else if(k==='h') say('j/k line   space/b page   g/G top/end   t theme');
+    else if(k==='q') say('There is no escape. Try g.');
+  });
+
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var cmd=document.getElementById('cmd'), cur=document.getElementById('cur'), text='man backup', n=0;
+  root.classList.add('booting');
+  cmd.innerHTML='<b>$</b> ';
+  cmd.appendChild(cur); cur.hidden=false;
+  (function type(){
+    if(n<text.length){cur.insertAdjacentText('beforebegin',text[n++]);setTimeout(type,70)}
+    else setTimeout(function(){cur.hidden=true;root.classList.remove('booting')},350);
+  })();
+})();
+</script>
 </body>
-
 </html>
