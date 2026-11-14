@@ -69,7 +69,7 @@ figcaption{color:var(--dim);margin-top:.4rem;font-size:13px}
 </head>
 <body>
 <div class="page">
-  <p class="cmd" id="cmd"><b>$</b> man backup<span class="cur" id="cur" hidden></span></p>
+  <p class="cmd" id="cmd"><b>$</b> cd backup<span class="cur" id="cur" hidden></span></p>
 
   <main id="man">
     <div class="bar"><span>BACKUP(7)</span><span>Personal Manual</span><span>BACKUP(7)</span></div>
@@ -149,10 +149,7 @@ figcaption{color:var(--dim);margin-top:.4rem;font-size:13px}
         <li>Check the backup logs for errors.</li>
         <li>Restore a few files from the backup to confirm data integrity.</li>
       </ol>
-      <figure>
-        <img src="backup-test.jpg" alt="Results of testing the backup system">
-        <figcaption>Fig. 5: Testing the backups.</figcaption>
-      </figure>
+
     </div>
 
     <h2>SEE ALSO</h2>
@@ -213,7 +210,7 @@ figcaption{color:var(--dim);margin-top:.4rem;font-size:13px}
   });
 
   if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var cmd=document.getElementById('cmd'), cur=document.getElementById('cur'), text='man backup', n=0;
+  var cmd=document.getElementById('cmd'), cur=document.getElementById('cur'), text='cd backup', n=0;
   root.classList.add('booting');
   cmd.innerHTML='<b>$</b> ';
   cmd.appendChild(cur); cur.hidden=false;
