@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,6 +37,8 @@ dl{display:grid;grid-template-columns:max-content 1fr;column-gap:3ch;row-gap:.8r
 dt{font-weight:700}
 dd{color:var(--fg)}
 dd small{color:var(--dim);font-size:1em}
+.hero{width:280px;max-width:100%;margin:2rem auto 0}
+.hero img{display:block;width:100%;height:auto;image-rendering:pixelated}
 .foot{margin-top:3rem;padding-top:1rem;border-top:1px dashed var(--rule)}
 .end{margin-top:1.2rem;background:var(--fg);color:var(--bg);display:inline-block;padding:0 .6ch}
 .end i{display:inline-block;width:.6em;height:1.1em;background:var(--bg);vertical-align:-.2em;margin-left:.4ch;animation:blink 1.1s steps(1) infinite}
@@ -50,6 +53,7 @@ dd small{color:var(--dim);font-size:1em}
   dl{grid-template-columns:1fr;row-gap:0}
   dd{padding-left:2ch;margin-bottom:.8rem}
   .name{font-size:1.2rem}
+  .hero{width:200px}
   #msg{display:none}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.cur,.end i{animation:none}}
@@ -57,77 +61,78 @@ dd small{color:var(--dim);font-size:1em}
 </head>
 <body>
 <div class="page">
-  <p class="cmd" id="cmd"><b>$</b> man hasan<span class="cur" id="cur" hidden></span></p>
-
+  <p class="cmd" id="cmd"><b>$</b> cd hasan<span class="cur" id="cur" hidden></span></p>
+ 
   <main id="man">
     <div class="bar"><span>HASAN(1)</span><span>Personal Manual</span><span>HASAN(1)</span></div>
-
-    <h2>NAME</h2>
-    <div class="b"><h1 class="name">hasan</h1><p>security, Linux, and the study of broken things</p></div>
-
+ 
+    <figure class="hero"><img src="computer.gif" width="500" height="443" alt="Pixel art of a vintage desktop computer with a monitor, keyboard, mouse, and two speakers"></figure>
+ 
+    
+ 
     <h2>SYNOPSIS</h2>
-    <div class="b"><p>hasan [--security] [--linux] [--old-systems] [--why-it-broke]</p></div>
-
+    <div class="b"><p>hasan [--security] [--linux] [--machines] [--operating-system]</p></div>
+ 
     <h2>DESCRIPTION</h2>
     <div class="b">
       <p>Hey, I'm Hasan. I built this site to collect the tech I've worked on and messed around with.</p>
       <p>I take systems apart, old and new, to learn how they work and why they sometimes don't. Have a look around.</p>
     </div>
-
+ 
     <h2>OPTIONS</h2>
     <div class="b">
       <dl>
         <dt>--security</dt><dd>Cybersecurity, learned hands-on through TryHackMe rooms and my own labs.</dd>
         <dt>--linux</dt><dd>Living in the terminal, and learning the system underneath it.</dd>
-        <dt>--old-systems</dt><dd>Legacy hardware and software. Digging into how things used to be built.</dd>
-        <dt>--why-it-broke</dt><dd>The part I enjoy most. Default: on.</dd>
+        <dt>--machines</dt><dd>Legacy hardware and software. Digging into how things used to be built.</dd>
+        <dt>--operating-system</dt><dd>The part I enjoy most. Default: on.</dd>
       </dl>
     </div>
-
+ 
     <h2>FILES</h2>
     <div class="b">
       <dl>
         <dt><a href="projects.html">projects.html</a></dt><dd>Write-ups, experiments, and tools I've built.</dd>
       </dl>
     </div>
-
+ 
     <h2>SEE ALSO</h2>
     <div class="b">
       <dl>
         <dt><a href="https://github.com/dedsn4keisonline" target="_blank" rel="noopener noreferrer">github(1)</a></dt><dd>My code.</dd>
         <dt><a href="https://tryhackme.com/p/H.Q" target="_blank" rel="noopener noreferrer">tryhackme(1)</a></dt><dd>My labs and rooms.</dd>
-        <dt><a href="https://www.linkedin.com/in/hasan-q-83768b2a2/" target="_blank" rel="noopener noreferrer">linkedin(1)</a></dt><dd>HIRE ME!.</dd>
+        <dt><a href="https://www.linkedin.com/in/hasan-q-83768b2a2/" target="_blank" rel="noopener noreferrer">linkedin(1)</a></dt><dd>Hire me.</dd>
       </dl>
     </div>
-
+ 
     <h2>BUGS</h2>
     <div class="b"><p>Sometimes takes things apart just to see how they work. Usually puts them back together.</p></div>
-
+ 
     <h2>AUTHOR</h2>
-    <div class="b"><p>Written by Hasan. Send bugs, offers, and hellos to <a href="mailto:hassanqusey000@gmail.com">hassanqusey000@gmail.com</a>.</p></div>
-
+    <div class="b"><p>Written by Hasan. Send bugs, offers, and hellos to <a href="mailto:hasanqosai.101@gmail.com">hasanqosai.101@gmail.com</a>.</p></div>
+ 
     <div class="bar foot"><span>hasan 1.0</span><span id="year">2026</span><span>HASAN(1)</span></div>
     <div class="end">(END)<i></i></div>
   </main>
 </div>
-
+ 
 <div class="status" role="status">
   <span id="msg">Manual page hasan(1). Press h for help.</span>
   <span><button type="button" id="theme">[t] theme</button> &nbsp; <span id="pos">line 1/1</span></span>
 </div>
-
+ 
 <script>
 (function(){
   var root=document.documentElement, msg=document.getElementById('msg'), pos=document.getElementById('pos');
   var base=msg.textContent, lh=parseFloat(getComputedStyle(document.body).lineHeight)||26, tm;
   document.getElementById('year').textContent=new Date().getFullYear();
-
+ 
   function theme(){
     var n=root.dataset.theme==='light'?'dark':'light'; root.dataset.theme=n;
     try{localStorage.setItem('theme',n)}catch(e){}
   }
   document.getElementById('theme').addEventListener('click',theme);
-
+ 
   function say(t){msg.textContent=t;clearTimeout(tm);tm=setTimeout(function(){msg.textContent=base},4000)}
   function update(){
     var total=Math.max(1,Math.round(root.scrollHeight/lh));
@@ -137,7 +142,7 @@ dd small{color:var(--dim);font-size:1em}
   window.addEventListener('scroll',update,{passive:true});
   window.addEventListener('resize',update);
   update();
-
+ 
   document.addEventListener('keydown',function(e){
     if(e.ctrlKey||e.metaKey||e.altKey) return;
     var tag=e.target.tagName, k=e.key, jump=function(y){window.scrollTo({top:y})};
@@ -152,10 +157,10 @@ dd small{color:var(--dim);font-size:1em}
     else if(k==='h') say('j/k line   space/b page   g/G top/end   t theme');
     else if(k==='q') say('There is no escape. Try g.');
   });
-
+ 
   // one intro: type "man hasan", then open the page
   if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var cmd=document.getElementById('cmd'), cur=document.getElementById('cur'), text='man hasan', n=0;
+  var cmd=document.getElementById('cmd'), cur=document.getElementById('cur'), text='cd hasan', n=0;
   root.classList.add('booting');
   cmd.innerHTML='<b>$</b> ';
   cmd.appendChild(cur); cur.hidden=false;
@@ -167,3 +172,4 @@ dd small{color:var(--dim);font-size:1em}
 </script>
 </body>
 </html>
+ 
